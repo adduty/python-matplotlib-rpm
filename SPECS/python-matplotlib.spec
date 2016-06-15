@@ -8,6 +8,20 @@ License: Python
 URL: http://matplotlib.org
 Source0: matplotlib-%{version}.tar.gz
 
+Patch0: %{name}-tk.patch
+# http://sourceforge.net/mailarchive/message.php?msg_id=30202451
+# https://github.com/matplotlib/matplotlib/pull/1666
+# https://bugzilla.redhat.com/show_bug.cgi?id=896182
+Patch1: %{name}-fontconfig.patch
+
+# Upstream setup.py tries to detect if gtk is installed, but this
+# requires an X server, and running the build under xvfb-run is
+# fragile.
+#
+# Patch out these tests, and assume that the BuildRequires: gtk2-devel
+# gives us what we need:
+Patch2: disable-detection-of-gtk.patch
+
 BuildRequires: agg-devel
 BuildRequires: cycler >= 0.9
 BuildRequires: freetype-devel >= 2.3
@@ -20,6 +34,7 @@ BuildRequires: python-dateutil
 BuildRequires: pygtk2-devel >= 2.4
 BuildRequires: pyparsing
 BuildRequires: python >= 2.7
+BuildRequires: python < 3
 BuildRequires: python-devel
 BuildRequires: python-setuptools
 BuildRequires: pytz
@@ -32,6 +47,7 @@ Requires: pycairo
 Requires: pygtk2
 Requires: pyparsing
 Requires: python >= 2.7
+Requires: python < 3
 Requires: python-dateutil >= 1.1
 Requires: pytz
 %if 0%{?fedora} >= 18
@@ -53,16 +69,31 @@ You can generate plots, histograms, power spectra, bar charts,
 errorcharts, scatterplots, etc, with just a few lines of code.
 
 %prep
-%setup -q -n matplotlib-%{version}.tar.gz
+%setup -q -n matplotlib-%{version}
 
+# Correct tcl/tk detection
+%patch0 -p1 -b .tk
+sed -i -e 's|@@libdir@@|%{_libdir}|' setupext.py
+
+# Use fontconfig by default
+%patch1 -p1 -b .fontconfig
+
+# Avoid the need for an X server during the build:
+%patch2 -p1
+
+chmod -x lib/matplotlib/mpl-data/images/*.svg
 
 %build
-%configure
-make %{?_smp_mflags}
+python2.7 setup.py build
 
+# Ensure all example files are non-executable so that the -doc
+# package doesn't drag in dependencies
+find examples -name '*.py' -exec chmod a-x '{}' \;
 
 %install
-make install DESTDIR=%{buildroot}
+python2.7 setup.py install -O1 --skip-build --root=$RPM_BUILD_ROOT
+chmod +x $RPM_BUILD_ROOT%{python_sitearch}/matplotlib/dates.py
+rm -rf $RPM_BUILD_ROOT%{python_sitearch}/matplotlib/mpl-data/fonts
 
 
 %files
