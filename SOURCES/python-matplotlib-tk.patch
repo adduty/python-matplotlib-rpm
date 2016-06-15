@@ -1,0 +1,34 @@
+--- matplotlib-1.5.1/setupext.py.orig	2016-06-15 17:29:58.403392489 -0600
++++ matplotlib-1.5.1/setupext.py	2016-06-15 17:32:22.069644927 -0600
+@@ -1397,12 +1397,12 @@ class BackendTkAgg(OptionalBackendPackag
+ 
+         tcl_poss = [tcl_lib_dir,
+                     os.path.normpath(os.path.join(tcl_lib_dir, '..')),
+-                    "/usr/lib/tcl" + str(Tkinter.TclVersion),
+-                    "/usr/lib"]
++                    "@@libdir@@/tcl" + str(Tkinter.TclVersion),
++                    "@@libdir@@"]
+         tk_poss = [tk_lib_dir,
+                     os.path.normpath(os.path.join(tk_lib_dir, '..')),
+-                   "/usr/lib/tk" + str(Tkinter.TkVersion),
+-                   "/usr/lib"]
++                   "@@libdir@@/tk" + str(Tkinter.TkVersion),
++                   "@@libdir@@"]
+         for ptcl, ptk in zip(tcl_poss, tk_poss):
+             tcl_config = os.path.join(ptcl, "tclConfig.sh")
+             tk_config = os.path.join(ptk, "tkConfig.sh")
+@@ -1480,10 +1480,10 @@ class BackendTkAgg(OptionalBackendPackag
+         return tcl_lib, tcl_inc, 'tcl' + tk_ver, tk_lib, tk_inc, 'tk' + tk_ver
+ 
+     def hardcoded_tcl_config(self):
+-        tcl_inc = "/usr/local/include"
+-        tk_inc = "/usr/local/include"
+-        tcl_lib = "/usr/local/lib"
+-        tk_lib = "/usr/local/lib"
++        tcl_inc = "/usr/include"
++        tk_inc = "/usr/include"
++        tcl_lib = "@@libdir@@"
++        tk_lib = "@@libdir@@"
+         return tcl_lib, tcl_inc, 'tcl', tk_lib, tk_inc, 'tk'
+ 
+     def add_flags(self, ext):
