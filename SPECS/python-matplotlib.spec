@@ -121,7 +121,7 @@ python2.7 setup.py build
 %if %{with_html}                                                                                                                                                                                                                             
 # Need to make built matplotlib libs available for the sphinx extensions:
 pushd doc
-    export PYTHONPATH=`realpath ../build/lib.linux*`
+    export PYTHONPATH=`realpath ../build/lib.linux*/matplotlib`
     %{__python2} make.py html
 popd
 %endif
