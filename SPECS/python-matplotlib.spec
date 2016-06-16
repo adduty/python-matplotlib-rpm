@@ -9,18 +9,6 @@ URL: http://matplotlib.org
 Source0: matplotlib-%{version}.tar.gz
 
 Patch0: %{name}-tk.patch
-# http://sourceforge.net/mailarchive/message.php?msg_id=30202451
-# https://github.com/matplotlib/matplotlib/pull/1666
-# https://bugzilla.redhat.com/show_bug.cgi?id=896182
-Patch1: %{name}-fontconfig.patch
-
-# Upstream setup.py tries to detect if gtk is installed, but this
-# requires an X server, and running the build under xvfb-run is
-# fragile.
-#
-# Patch out these tests, and assume that the BuildRequires: gtk2-devel
-# gives us what we need:
-Patch2: disable-detection-of-gtk.patch
 
 BuildRequires: agg-devel
 BuildRequires: cycler >= 0.9
@@ -74,12 +62,6 @@ errorcharts, scatterplots, etc, with just a few lines of code.
 # Correct tcl/tk detection
 %patch0 -p1 -b .tk
 sed -i -e 's|@@libdir@@|%{_libdir}|' setupext.py
-
-# Use fontconfig by default
-%patch1 -p1 -b .fontconfig
-
-# Avoid the need for an X server during the build:
-%patch2 -p1
 
 chmod -x lib/matplotlib/mpl-data/images/*.svg
 
