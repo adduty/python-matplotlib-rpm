@@ -1,5 +1,5 @@
 %global __provides_exclude_from .*/site-packages/.*\\.so$
-%global with_html               1
+%global with_html               0
 
 Name: python-matplotlib
 Version: 1.5.1
@@ -29,7 +29,6 @@ BuildRequires: python < 3
 BuildRequires: python-devel
 BuildRequires: python-setuptools
 BuildRequires: pytz
-BuildRequires: wxPython >= 2.8
 BuildRequires: zlib-devel
 Requires: dejavu-sans-fonts
 Requires: dvipng
@@ -46,7 +45,6 @@ Requires: stix-math-fonts
 %else
 Requires: stix-math-fonts
 %endif
-Requires: wxPython
 
 %description
 Matplotlib is a python 2D plotting library which produces publication
@@ -85,8 +83,8 @@ Requires:       tkinter
 Summary:        wxPython backend for python-matplotlib
 Group:          Development/Libraries
 Requires:       %{name}%{?_isa} = %{version}-%{release}
-BuildRequires:  wxPython-devel
-Requires:       wxPython
+BuildRequires:  wxPython-devel >= 2.8
+Requires:       wxPython >= 2.8
 
 %description    wx
 %{summary}
@@ -137,15 +135,16 @@ rm -rf $RPM_BUILD_ROOT%{python_sitearch}/matplotlib/mpl-data/fonts
 
 
 %files
-%doc README.txt
-%doc lib/dateutil_py2/LICENSE
+%doc doc/README.txt
+%doc LICENSE
 %doc lib/matplotlib/mpl-data/fonts/ttf/LICENSE_STIX
-%doc lib/pytz/LICENSE.txt
+#%doc lib/pytz/LICENSE.txt
 %doc CHANGELOG
-%doc CXX
+#%doc CXX
 %doc INSTALL
-%doc PKG-INFO
-%doc TODO
+%doc %{python_sitearch}/matplotlib-%{version}-py2.7.egg-info/PKG-INFO
+#%doc TODO
+%{python_sitearch}/matplotlib-1.5.1-py2.7-nspkg.pth
 %{python_sitearch}/*egg-info
 %{python_sitearch}/matplotlib/
 %{python_sitearch}/mpl_toolkits/
