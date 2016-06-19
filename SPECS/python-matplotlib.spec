@@ -30,6 +30,7 @@ BuildRequires: python-devel
 BuildRequires: python-setuptools
 BuildRequires: pytz
 BuildRequires: zlib-devel
+Requires: cycler >= 0.9
 Requires: dejavu-sans-fonts
 Requires: dvipng
 Requires: numpy >= 1.6
